@@ -76,10 +76,7 @@ spec = do
       Lib.someFunc `shouldBe` "Hello, world!"
 
 {-# START_FILE src/Lib.hs #-}
-module Lib
-  ( someFunc,
-  )
-where
+module Lib where
 
 someFunc :: String
 someFunc = "Hello, world!"
