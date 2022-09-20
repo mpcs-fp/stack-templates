@@ -1,0 +1,147 @@
+{-# START_FILE package.yaml #-}
+name:                {{name}}
+version:             0.1.0.0
+
+extra-source-files:
+- README.md
+
+description:         {{name}}
+
+ghc-options:
+- -Wall
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wno-unused-top-binds
+- -Wno-unused-local-binds
+- -Wno-unused-pattern-binds
+- -Wno-unused-matches
+- -Wno-missing-signatures
+- -Wno-type-defaults
+- -Wno-compat-unqualified-imports
+
+default-extensions:
+- InstanceSigs
+- NamedFieldPuns
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  {{name}}-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - {{name}}
+    when:
+    - condition: false
+      other-modules: Paths_{{name}}
+
+tests:
+  {{name}}-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - {{name}}
+    - hspec
+    - hspec-discover
+    - QuickCheck
+
+{-# START_FILE test/Spec.hs #-}
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+
+{-# START_FILE test/LibSpec.hs #-}
+module LibSpec
+  ( spec,
+  )
+where
+
+import qualified Lib
+import Test.Hspec (Spec, describe, it, shouldBe)
+
+spec :: Spec
+spec = do
+  describe "someFunc" $ do
+    it "returns a string" $ do
+      Lib.someFunc `shouldBe` "Hello, world!"
+
+{-# START_FILE src/Lib.hs #-}
+module Lib
+  ( someFunc,
+  )
+where
+
+someFunc :: String
+someFunc = "Hello, world!"
+
+{-# START_FILE app/Main.hs #-}
+module Main where
+
+import qualified Lib
+
+main :: IO ()
+main = putStrLn Lib.someFunc
+
+{-# START_FILE README.md #-}
+# {{name}}
+
+## Build
+
+```
+stack build
+```
+
+## Test
+
+```
+stack test
+```
+
+## Run
+
+```
+stack run
+```
+
+{-# START_FILE .gitignore #-}
+.stack-work/
+*~
+
+{-# START_FILE .github/workflows/build.yml #-}
+name: build
+
+on:
+  - push
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    container:
+      image: haskell:8.10.7-buster
+      options: --user root
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.stack
+            .stack-work
+            */.stack-work
+          key: {{ name }}
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+      - name: Build
+        run: stack build --allow-different-user
+      - name: Test
+        run: stack test --allow-different-user
