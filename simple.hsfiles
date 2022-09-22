@@ -53,9 +53,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - {{name}}
-    - hspec
-    - hspec-discover
-    - QuickCheck
+    - tasty
 
 {-# START_FILE test/Spec.hs #-}
 {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
