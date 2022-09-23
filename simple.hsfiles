@@ -54,30 +54,25 @@ tests:
     dependencies:
     - {{name}}
     - tasty
+    - tasty-hunit
 
-{-# START_FILE test/Spec.hs #-}
-{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+{-# START_FILE test/Tests.hs #-}
+module Main where
 
-{-# START_FILE test/LibSpec.hs #-}
-module LibSpec
-  ( spec,
-  )
-where
+import Test.Tasty
+import Test.Tasty.HUnit
 
 import qualified Lib
-import Test.Hspec (Spec, describe, it, shouldBe)
 
-spec :: Spec
-spec = do
-  describe "someFunc" $ do
-    it "returns a string" $ do
-      Lib.someFunc `shouldBe` "Hello, world!"
+msgTest :: TestTree
+msgTest = testCase "message mentions the MPCS"
+	  $ Lib.msg == "Hello, MPCS 51400 World!"
 
 {-# START_FILE src/Lib.hs #-}
 module Lib where
 
-someFunc :: String
-someFunc = "Hello, world!"
+msg :: String
+msg = "Hello, MPCS 51400 World!"
 
 {-# START_FILE app/Main.hs #-}
 module Main where
@@ -85,7 +80,7 @@ module Main where
 import qualified Lib
 
 main :: IO ()
-main = putStrLn Lib.someFunc
+main = putStrLn Lib.msg
 
 {-# START_FILE README.md #-}
 # {{name}}
@@ -109,7 +104,7 @@ stack run
 ```
 
 {-# START_FILE .gitignore #-}
-.stack-work/
+**/.stack-work/*
 *~
 
 {-# START_FILE .github/workflows/build.yml #-}
