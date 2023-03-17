@@ -76,7 +76,7 @@ spec :: Spec
 spec = do
   describe "someFunc" $ do
     it "message mentions the MPCS" $ do
-       $ Lib.msg `shouldBe` "Hello, MPCS 51400 World!"
+      Lib.msg `shouldBe` "Hello, MPCS 51400 World!"
 
 
 {-# START_FILE src/Lib.hs #-}
