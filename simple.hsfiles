@@ -47,7 +47,7 @@ executables:
 
 tests:
   {{name}}-test:
-    main:                Tests.hs
+    main:                Spec.hs
     source-dirs:         test
     ghc-options:
     - -threaded
@@ -55,20 +55,29 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - {{name}}
-    - tasty
-    - tasty-hunit
+    - hspec
+    - hspec-discover
+    - QuickCheck
 
-{-# START_FILE test/Tests.hs #-}
-module Main where
 
-import Test.Tasty
-import Test.Tasty.HUnit
+{-# START_FILE test/Spec.hs #-}
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+
+{-# START_FILE test/LibSpec.hs #-}
+module LibSpec
+  ( spec,
+  )
+where
 
 import qualified Lib
+import Test.Hspec (Spec, describe, it, shouldBe)
 
-msgTest :: TestTree
-msgTest = testCase "message mentions the MPCS"
-	  $ Lib.msg == "Hello, MPCS 51400 World!"
+spec :: Spec
+spec = do
+  describe "someFunc" $ do
+    it "message mentions the MPCS" $ do
+       $ Lib.msg `shouldBe` "Hello, MPCS 51400 World!"
+
 
 {-# START_FILE src/Lib.hs #-}
 module Lib where
