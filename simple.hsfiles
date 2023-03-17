@@ -19,6 +19,8 @@ ghc-options:
 - -Wno-type-defaults
 - -Wno-compat-unqualified-imports
 
+language: GHC2021
+
 default-extensions:
 - InstanceSigs
 - NamedFieldPuns
@@ -118,7 +120,7 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     container:
-      image: haskell:8.10.7-buster
+      image: haskell:9.2.5-buster
       options: --user root
     steps:
       - uses: actions/checkout@v2
