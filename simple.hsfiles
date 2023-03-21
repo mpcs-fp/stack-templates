@@ -18,6 +18,7 @@ ghc-options:
 - -Wno-missing-signatures
 - -Wno-type-defaults
 - -Wno-compat-unqualified-imports
+- -Wno-name-shadowing
 
 language: GHC2021
 
