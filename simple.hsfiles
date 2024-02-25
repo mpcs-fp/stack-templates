@@ -19,6 +19,7 @@ ghc-options:
 - -Wno-type-defaults
 - -Wno-compat-unqualified-imports
 - -Wno-name-shadowing
+- -fdefer-typed-holes
 
 language: GHC2021
 
@@ -130,7 +131,7 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     container:
-      image: haskell:9.2.5-buster
+      image: haskell:9.4.8-buster
       options: --user root
     steps:
       - uses: actions/checkout@v2
