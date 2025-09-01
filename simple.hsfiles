@@ -21,7 +21,7 @@ ghc-options:
 - -Wno-name-shadowing
 - -fdefer-typed-holes
 
-language: GHC2021
+language: GHC2024
 
 default-extensions:
 - InstanceSigs
@@ -131,11 +131,11 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     container:
-      image: haskell:9.4.8-buster
+      image: haskell:9.6.7-slim
       options: --user root
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.stack
